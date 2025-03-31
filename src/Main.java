@@ -29,7 +29,17 @@
     ? - ImageHandler: image load, save
     ! - GifWriter: gif maker (BONUS)
     
-    BONUS: TargetCompressionPercentage, SSIM, GifWriter
+    ! BONUS: TargetCompressionPercentage, SSIM, GifWriter
+    * FLOW: 
+    1. Load
+    2. Create root node
+    3. For each node: 
+        - calculate error
+        - if (Error > threshold && size(width*height) > minBlockSize) -> split into 4 children, recursively process each child
+        - else -> calculate average rgb for node, mark as leaf node
+    4. generate compressed from quadtree -> for each leaf node, fill area with avg rgb
+    5. calculate statistics (execTime, size, compression %, depth, node count)
+    6. Save compressed image
 */
 
 import java.io.File;
@@ -40,34 +50,24 @@ import java.awt.image.BufferedImage;
 
 public class Main {
     public static void main(String[] args) {
-        try (Scanner scanner = new Scanner(System.in)) {
-            System.out.println("Enter image file path: ");
-            String filePath = scanner.nextLine();
+        clearScreen();
+        // Input image
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("\n> Enter image file path: ");
+        String filePath = scanner.nextLine();
 
-            File file = new File(filePath);
-            String fileName = file.getName();
+        ReadInput.readInput(filePath);
 
-            // Check image type
-            if (!fileName.endsWith(".jpg") && !fileName.endsWith(".png") && !fileName.endsWith(".jpeg")) {
-                System.err.println("Error: only jpg, png and jpeg files are supported");
-                return;
-            }
+        scanner.close();
+    }
 
-            BufferedImage image;
-            try {
-                image = ImageIO.read(file);
-            } catch (IOException e) {
-                System.err.println("Error loading image");
-                return;
-            }
-
-            if (image != null) {
-                System.out.println("Image loaded successfully!");
-                System.out.println("Width " + image.getWidth());
-                System.out.println("Height " + image.getHeight());
-            } else {
-                System.out.println("Error reading file");
-            }
+    public static void clearScreen() {
+        try {
+            // For Windows
+            new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+        } catch (Exception e) {
+            System.out.print("\033[H\033[2J");
+            System.out.flush();
         }
     }
 }
