@@ -9,6 +9,7 @@ class QuadTreeNode {
     private QuadTreeNode bottomLeft;
     private QuadTreeNode bottomRight;
 
+
     private double meanR, meanG, meanB;
     // ctor 
     public QuadTreeNode(int x, int y, int width, int height){ 
@@ -35,12 +36,16 @@ class QuadTreeNode {
         isLeaf = false;
     }
 
+   
     // getter setter
     public int getX() { return this.x; }
     public int getY() { return this.y; }
     public int getWidth() { return this.width; }
     public int getHeight() { return this.height; }
 
+    public double getMeanR() { return this.meanR; }
+    public double getMeanG() { return this.meanG; }
+    public double getMeanB() { return this.meanB; }
     public void setMeanValues(double meanR, double meanG, double meanB) {
         this.meanR = meanR;
         this.meanG = meanG;
@@ -53,3 +58,5 @@ class QuadTreeNode {
     public QuadTreeNode getBottomLeft() { return this.bottomLeft; }
     public QuadTreeNode getBottomRight() { return this.bottomRight; }
 }
+
+

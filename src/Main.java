@@ -57,6 +57,11 @@ public class Main {
 
         // READ
         ImageInfo imageInfo = ReadInput.readInput(filePath);
+
+        // TEST
+        BufferedImage image = imageInfo.getOriginalImage();
+        double error = ErrorCalculation.getError(imageInfo);
+        System.out.println("Error: " + error);
         
         // ! TESTING
         // BufferedImage image = imageInfo.getOriginalImage();

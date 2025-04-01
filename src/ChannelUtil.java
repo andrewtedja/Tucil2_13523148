@@ -9,8 +9,9 @@ class ChannelUtil {
     public static final int blueChannel = 2;
 
     // * Calculate Mean for specific channel in a block (hasil -> MIUr MIUg MIUb)
-    public static double calculateMeanForChannel(BufferedImage image, int x, int y, int width, int height, int channel) {
-        long sum = 0;
+    public static double[] calculateAllMeans(BufferedImage image, int x, int y, int width, int height) {
+        double[] meansList = new double[3];
+        long[] sums = {0, 0, 0};
         int N = width * height;
     
         for (int j = y; j < height + y; j++) {
@@ -18,23 +19,17 @@ class ChannelUtil {
                 int rgb = image.getRGB(i, j);
                 Color color = new Color(rgb);
                 
-                switch (channel) {
-                    case redChannel:
-                        sum += color.getRed();
-                        break;
-                    case greenChannel:
-                        sum += color.getGreen();
-                        break;
-                    case blueChannel:
-                        sum += color.getBlue();
-                        break;
-                }
+                sums[redChannel] += color.getRed();
+                sums[greenChannel] += color.getGreen();    
+                sums[blueChannel] += color.getBlue();
             }
         }
-        return (double) sum / N;
+        for (int i = 0; i < 3; i++) {
+            meansList[i] = (double) sums[i] / N;
+        }
+        return meansList;
     }
-
-    // * Get pixel values
+    // * Get pixel intensity
     public static List<Integer> getChannelValues(BufferedImage image, int x, int y, int width, int height, int channel) {
         List<Integer> values = new ArrayList<>(width * height);
 
@@ -59,6 +54,7 @@ class ChannelUtil {
         return values;
     }
 
+    // * Get min max for MAD error calculation
     public static double[] getChannelMinMax(BufferedImage image, int x, int y, int width, int height, int channel) {
         int min = 255;
         int max = 0;

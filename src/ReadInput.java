@@ -27,11 +27,12 @@ class ReadInput {
             } else {
                 throw new IllegalArgumentException("Error: File path is empty");
 
+                
             }
-            
+            // read file
             BufferedImage image;
             try {
-                image = ImageIO.read(file);
+                image = ImageIO.read(file); 
             } catch (IOException e) {
                 throw new IllegalArgumentException("Error loading image");
             } catch (OutOfMemoryError e) {
@@ -59,30 +60,20 @@ class ReadInput {
                 throw new IllegalArgumentException("Error: Invalid error method selected");
             }
 
-            // Input threshold
+
+            // inputs
             System.out.print("> Enter threshold: ");
             double threshold = scanner.nextDouble();
-
-            // Input minBlockSize
             System.out.print("> Enter minimum block size: ");
             int minBlockSize = scanner.nextInt();
-
-            // Input targetCompressionPercentage
             System.out.print("> Enter target compression percentage (floating number, 1.0 = 100%): ");
             double targetCompressionPercentage = scanner.nextDouble();
-
-            // Input output folder path
             System.out.print("> Enter output Image folder path: ");
             String outputFolderPath = scanner.next();
-
-            // Input output gif folder path
             System.out.print("> Enter output GIF folder path: ");
             String gifFolderPath = scanner.next();
                         
-            
             return new ImageInfo(image, filePath, outputFolderPath, errorMethod, threshold, minBlockSize, targetCompressionPercentage, gifFolderPath);
-
-
 
             // Show (TESTING)
             // System.out.println("Image name: " + fileName);
