@@ -1,4 +1,5 @@
 import java.awt.image.BufferedImage;
+
 class ImageInfo {
     private String inputPath;
     private String outputPath;
@@ -8,6 +9,7 @@ class ImageInfo {
     private BufferedImage originalImage;
     private double targetCompressionPercentage;
     private String gifFolderPath;
+    // private int area;
     
     // ctor
     public ImageInfo(BufferedImage image, String inputPath, String outputPath, int errorMethod, double threshold, int minBlockSize, double targetCompressionPercentage, String gifFolderPath) {
@@ -22,6 +24,8 @@ class ImageInfo {
         this.targetCompressionPercentage = targetCompressionPercentage;
         this.gifFolderPath = gifFolderPath;
     }
+
+    // public int getArea() { return area; }
     
     // getter setters
     public String getInputPath() { return inputPath; }
@@ -30,7 +34,13 @@ class ImageInfo {
     public double getThreshold() { return threshold; }
     public int getMinBlockSize() { return minBlockSize; }
     public BufferedImage getOriginalImage() { return originalImage; }
-    public void setOriginalImage(BufferedImage image) { this.originalImage = image; }
+    public void setOriginalImage(BufferedImage image) { 
+        this.originalImage = image; 
+        // this.area = image.getWidth() * image.getHeight();
+    }
+
     public double getTargetCompressionPercentage() { return targetCompressionPercentage; }
     public String getGifFolderPath() { return gifFolderPath; }
+
+
 }

@@ -21,6 +21,7 @@
 
     * Classes:
     ? - Main: main for CLI & testing
+    ? - ImageInfo: store data
     ? - QuadTreeNode: every node in quadtree
     ? - QuadTreeCompressor: compressor main class, DnC algorithm
     ? - ErrorCalculation: Variance, MAD, MaxPixelDifference, Entropy, 
@@ -42,11 +43,8 @@
     6. Save compressed image
 */
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Scanner;
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
@@ -59,13 +57,23 @@ public class Main {
 
         // READ
         ImageInfo imageInfo = ReadInput.readInput(filePath);
-
-        System.out.println("Min block size:");
-        System.out.println(imageInfo.getMinBlockSize());
-        System.out.println("Width: ");
-        System.out.println(imageInfo.getOriginalImage().getWidth());
-        System.out.println("Height: ");
-        System.out.println(imageInfo.getOriginalImage().getHeight());
+        
+        // ! TESTING
+        // BufferedImage image = imageInfo.getOriginalImage();
+        // int x = 0;
+        // int y = 0;
+        // int width = image.getWidth();
+        // int height = image.getHeight();
+        // double[] redMinMax = ChannelUtil.getChannelMinMax(image, x, y, width, height, ChannelUtil.redChannel);
+        // double redMin = redMinMax[0]; // Min value for Red channel
+        // double redMax = redMinMax[1]; // Max value for Red channel
+        // System.out.println(imageInfo.getArea());
+        // System.out.println("Min block size:");
+        // System.out.println(imageInfo.getMinBlockSize());
+        // System.out.println("Width: ");
+        // System.out.println(imageInfo.getOriginalImage().getWidth());
+        // System.out.println("Height: ");
+        // System.out.println(imageInfo.getOriginalImage().getHeight());
 
         scanner.close();
     }
