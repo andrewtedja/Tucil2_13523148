@@ -56,7 +56,16 @@ public class Main {
         System.out.println("\n> Enter image file path: ");
         String filePath = scanner.nextLine();
 
-        ReadInput.readInput(filePath);
+
+        // READ
+        ImageInfo imageInfo = ReadInput.readInput(filePath);
+
+        System.out.println("Min block size:");
+        System.out.println(imageInfo.getMinBlockSize());
+        System.out.println("Width: ");
+        System.out.println(imageInfo.getOriginalImage().getWidth());
+        System.out.println("Height: ");
+        System.out.println(imageInfo.getOriginalImage().getHeight());
 
         scanner.close();
     }
