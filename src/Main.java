@@ -23,7 +23,7 @@
     ? - Main: main for CLI & testing
     ? - ImageInfo: store data
     ? - QuadTreeNode: every node in quadtree
-    ? - QuadTreeCompressor: compressor main class, DnC algorithm
+    ? - Compressor: compressor main class, DnC algorithm
     ? - ErrorCalculation: Variance, MAD, MaxPixelDifference, Entropy, 
     ? - Statistics: calculate statistics
     ! SSIM (BONUS)
@@ -46,6 +46,10 @@
 import java.awt.image.BufferedImage;
 import java.util.Scanner;
 
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+
 public class Main {
     public static void main(String[] args) {
         clearScreen();
@@ -60,9 +64,23 @@ public class Main {
 
         // TEST
         BufferedImage image = imageInfo.getOriginalImage();
-        double error = ErrorCalculation.getError(imageInfo);
+
+
+        QuadTreeNode root = new QuadTreeNode(0, 0, image.getWidth(), image.getHeight());
+        double error = ErrorCalculation.getError(root, image, imageInfo.getErrorMethod());
         System.out.println("Error: " + error);
-        
+
+        Compressor compressor = new Compressor(imageInfo);
+        // System.out.println("TEST1");
+        compressor.compress();
+        // System.out.println("TEST1");
+        BufferedImage compressedImage = compressor.createCompressedImage();
+        // System.out.println("TEST1");
+        try {
+            ImageIO.write(compressedImage, "jpg", new File(imageInfo.getOutputPath() + "/compressed.jpg"));
+        } catch (Exception e) {
+            System.out.println("Error saving compressed image: " + e.getMessage());
+        }
         // ! TESTING
         // BufferedImage image = imageInfo.getOriginalImage();
         // int x = 0;
@@ -92,5 +110,5 @@ public class Main {
             System.out.flush();
         }
     }
-}
 
+}

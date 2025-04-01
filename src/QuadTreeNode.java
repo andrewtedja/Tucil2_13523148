@@ -26,17 +26,18 @@ class QuadTreeNode {
     }
     
     public void split() {
-        int newWidth = width / 2;
-        int newHeight = height / 2;
+        int leftWidth = width / 2;
+        int rightWidth = width - leftWidth;
+        int topHeight = height / 2;
+        int bottomHeight = height - topHeight;
 
-        topLeft = new QuadTreeNode(x, y, newWidth, newHeight);
-        topRight = new QuadTreeNode(x + newWidth, y, newWidth, newHeight);
-        bottomLeft = new QuadTreeNode(x, y + newHeight, newWidth, newHeight);
-        bottomRight = new QuadTreeNode(x + newWidth,y + newHeight, newWidth, newHeight);
+        topLeft = new QuadTreeNode(x, y, leftWidth, topHeight);
+        topRight = new QuadTreeNode(x + leftWidth, y, rightWidth, topHeight);
+        bottomLeft = new QuadTreeNode(x, y + topHeight, leftWidth, bottomHeight);
+        bottomRight = new QuadTreeNode(x + leftWidth,y + topHeight, rightWidth, bottomHeight);
         isLeaf = false;
     }
 
-   
     // getter setter
     public int getX() { return this.x; }
     public int getY() { return this.y; }
@@ -58,5 +59,3 @@ class QuadTreeNode {
     public QuadTreeNode getBottomLeft() { return this.bottomLeft; }
     public QuadTreeNode getBottomRight() { return this.bottomRight; }
 }
-
-
