@@ -62,41 +62,31 @@ public class Main {
         // READ
         ImageInfo imageInfo = ReadInput.readInput(filePath);
 
-        // TEST
         BufferedImage image = imageInfo.getOriginalImage();
 
-
-        QuadTreeNode root = new QuadTreeNode(0, 0, image.getWidth(), image.getHeight());
-        double error = ErrorCalculation.getError(root, image, imageInfo.getErrorMethod());
-        System.out.println("Error: " + error);
+        // try {
+        //     int originalSizeBytes2 = Compressor.getImageSizeInBytes(image, imageInfo.getInputFormat());
+        //     System.out.println("Image size (BAOS method): " + originalSizeBytes2 + " bytes");
+        // } catch (IOException e) {
+        //     System.err.println("Error calculating image size: " + e.getMessage());
+        // }
+        
 
         Compressor compressor = new Compressor(imageInfo);
-        // System.out.println("TEST1");
         compressor.compress();
-        // System.out.println("TEST1");
         BufferedImage compressedImage = compressor.createCompressedImage();
-        // System.out.println("TEST1");
+        long executionTime = compressor.getExecutionTime();
+        System.out.println("Execution time: " + executionTime + " ms");
+
+        // * SAVE
         try {
             ImageIO.write(compressedImage, "jpg", new File(imageInfo.getOutputPath() + "/compressed.jpg"));
+            System.out.println("Compressed image saved successfully!");
         } catch (Exception e) {
             System.out.println("Error saving compressed image: " + e.getMessage());
         }
-        // ! TESTING
-        // BufferedImage image = imageInfo.getOriginalImage();
-        // int x = 0;
-        // int y = 0;
-        // int width = image.getWidth();
-        // int height = image.getHeight();
-        // double[] redMinMax = ChannelUtil.getChannelMinMax(image, x, y, width, height, ChannelUtil.redChannel);
-        // double redMin = redMinMax[0]; // Min value for Red channel
-        // double redMax = redMinMax[1]; // Max value for Red channel
-        // System.out.println(imageInfo.getArea());
-        // System.out.println("Min block size:");
-        // System.out.println(imageInfo.getMinBlockSize());
-        // System.out.println("Width: ");
-        // System.out.println(imageInfo.getOriginalImage().getWidth());
-        // System.out.println("Height: ");
-        // System.out.println(imageInfo.getOriginalImage().getHeight());
+
+        
 
         scanner.close();
     }

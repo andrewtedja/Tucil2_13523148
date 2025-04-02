@@ -1,4 +1,11 @@
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+
+import javax.imageio.ImageIO;
+
 import java.awt.Color;
 
 public class Compressor {
@@ -6,6 +13,12 @@ public class Compressor {
     private QuadTreeNode root;
     private int nodeCnt;
     private int maxDepth;
+    private long executionTime;
+    private int originalSizeBytes;
+    private int compressedSizeBytes;
+    private final int tolerance = 100;
+
+
     
     public Compressor(ImageInfo imageInfo) {
         this.imageInfo = imageInfo;
@@ -18,19 +31,19 @@ public class Compressor {
         return compressedImage;
     }
     
-    public long compress() {
+    public void compress() {
         long startTime = System.nanoTime();
-        System.out.println("TEST1");
+        // System.out.println("TEST1");
+
         BufferedImage image = imageInfo.getOriginalImage();
         this.root = new QuadTreeNode(0, 0, image.getWidth(), image.getHeight());
         this.maxDepth = 1;
         this.nodeCnt = 1;
         buildTree(root, 1);
-        System.out.println("TEST3");
+        // System.out.println("TEST3");
 
         long endTime = System.nanoTime();
-        long executionTime = (endTime - startTime);
-        return executionTime;
+        this.executionTime = (endTime - startTime) / 1000000;
     }
 
 
@@ -62,6 +75,7 @@ public class Compressor {
     }
 
     // ? HELPER
+    // Set avg rgb for each node
     public void setNodeColor(QuadTreeNode node) {
         BufferedImage image = imageInfo.getOriginalImage();
         int height = node.getHeight();
@@ -73,6 +87,7 @@ public class Compressor {
         node.setMeanValues(meansList[0], meansList[1], meansList[2]);
     }
 
+    // fill the new image with color
     public void colorImage(QuadTreeNode node, BufferedImage target) {
         if (node.getIsLeaf()) {
             Color color = new Color(
@@ -93,6 +108,16 @@ public class Compressor {
         }
     }
     
+    // BAOS
+    public static int getImageSizeInBytes(BufferedImage image, String format) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ImageIO.write(image, format, baos);  
+        baos.flush();
+        int size = baos.size(); 
+        baos.close();
+        return size;
+    }
+
     public int getMaxDepth() {
         return maxDepth;
     }
@@ -100,4 +125,9 @@ public class Compressor {
     public int getNodeCount() {
         return nodeCnt;
     }
+
+    public long getExecutionTime() {
+        return executionTime;
+    }
+
 }   

@@ -62,12 +62,12 @@ class ReadInput {
 
 
             // inputs
-            System.out.print("> Enter threshold: ");
-            double threshold = scanner.nextDouble();
-            System.out.print("> Enter minimum block size: ");
-            int minBlockSize = scanner.nextInt();
             System.out.print("> Enter target compression percentage (floating number, 1.0 = 100%): ");
             double targetCompressionPercentage = scanner.nextDouble();
+            System.out.print("> Enter minimum block size: ");
+            int minBlockSize = scanner.nextInt();
+            System.out.print("> Enter threshold: ");
+            double threshold = scanner.nextDouble();
             System.out.print("> Enter output Image folder path: ");
             String outputFolderPath = scanner.next();
             System.out.print("> Enter output GIF folder path: ");
