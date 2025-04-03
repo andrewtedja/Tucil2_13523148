@@ -46,8 +46,6 @@ class ErrorCalculation {
         return -entropy;
     }
 
-
-
     // * Get error value based on input
     public static double getError(QuadTreeNode node, BufferedImage image, int errorMethod) {
         double error = 0;
@@ -67,7 +65,7 @@ class ErrorCalculation {
         switch (errorMethod) {
             case 1: 
             // Variance
-                double[] meansList = ChannelUtil.calculateAllMeans(image, 0, 0, width, height);
+                double[] meansList = ChannelUtil.calculateAllMeans(image, x, y, width, height);
                 double meanR = meansList[0];
                 double meanG = meansList[1];
                 double meanB = meansList[2];
@@ -80,7 +78,7 @@ class ErrorCalculation {
     
             case 2: 
             // MAD
-                meansList = ChannelUtil.calculateAllMeans(image, 0, 0, width, height);
+                meansList = ChannelUtil.calculateAllMeans(image, x, y, width, height);
                 meanR = meansList[0];
                 meanG = meansList[1];
                 meanB = meansList[2];
@@ -94,9 +92,9 @@ class ErrorCalculation {
     
             case 3: 
             // Max Pixel Difference
-                double[] minMaxR = ChannelUtil.getChannelMinMax(image, 0, 0, width, height, ChannelUtil.redChannel);
-                double[] minMaxG = ChannelUtil.getChannelMinMax(image, 0, 0, width, height, ChannelUtil.greenChannel);
-                double[] minMaxB = ChannelUtil.getChannelMinMax(image, 0, 0, width, height, ChannelUtil.blueChannel);
+                double[] minMaxR = ChannelUtil.getChannelMinMax(image, x, y, width, height, ChannelUtil.redChannel);
+                double[] minMaxG = ChannelUtil.getChannelMinMax(image, x, y, width, height, ChannelUtil.greenChannel);
+                double[] minMaxB = ChannelUtil.getChannelMinMax(image, x, y, width, height, ChannelUtil.blueChannel);
 
                 double mpdR = calculateMPDForChannel(minMaxR);
                 double mpdG = calculateMPDForChannel(minMaxG);
@@ -114,7 +112,7 @@ class ErrorCalculation {
     
             case 5: 
             // SSIM (Simplified)
-                meansList = ChannelUtil.calculateAllMeans(image, 0, 0, width, height);
+                meansList = ChannelUtil.calculateAllMeans(image, x, y, width, height);
                 meanR = meansList[0];
                 meanG = meansList[1];
                 meanB = meansList[2];

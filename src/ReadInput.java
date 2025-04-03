@@ -7,14 +7,8 @@ import java.awt.image.BufferedImage;
 class ReadInput {
     public static ImageInfo readInput(String filePath)  {
         try (Scanner scanner = new Scanner(System.in)) {
-
-            // Input image
-            // System.out.println("\n> Enter image file path: ");
-            // String filePath = scanner.nextLine();
-
             File file = new File(filePath);
             String fileName = file.getName();
-            
             
             // Validation
             if (!fileName.isEmpty()) {
@@ -60,20 +54,22 @@ class ReadInput {
                 throw new IllegalArgumentException("Error: Invalid error method selected");
             }
 
-
             // inputs
-            System.out.print("> Enter target compression percentage (floating number, 1.0 = 100%): ");
-            double targetCompressionPercentage = scanner.nextDouble();
-            System.out.print("> Enter minimum block size: ");
-            int minBlockSize = scanner.nextInt();
             System.out.print("> Enter threshold: ");
             double threshold = scanner.nextDouble();
-            System.out.print("> Enter output Image folder path: ");
-            String outputFolderPath = scanner.next();
+            System.out.print("> Enter minimum block size: ");
+            int minBlockSize = scanner.nextInt();
+
+            
+            System.out.print("> Enter target compression percentage (floating number, 1.0 = 100%, 0 if want to turn of this mode): ");
+            double targetCompressionPercentage = scanner.nextDouble();
+
+            System.out.print("> Enter output file path [ABSOLUTE]: ");
+            String outputPath = scanner.next();
             System.out.print("> Enter output GIF folder path: ");
             String gifFolderPath = scanner.next();
                         
-            return new ImageInfo(image, filePath, outputFolderPath, errorMethod, threshold, minBlockSize, targetCompressionPercentage, gifFolderPath);
+            return new ImageInfo(image, filePath, outputPath, errorMethod, threshold, minBlockSize, targetCompressionPercentage, gifFolderPath);
 
             // Show (TESTING)
             // System.out.println("Image name: " + fileName);

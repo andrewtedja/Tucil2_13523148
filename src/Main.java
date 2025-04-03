@@ -48,45 +48,54 @@ import java.util.Scanner;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+
 import javax.imageio.ImageIO;
 
 public class Main {
     public static void main(String[] args) {
         clearScreen();
+
+        // * INPUT AND READ
         // Input image
         Scanner scanner = new Scanner(System.in);
-        System.out.println("\n> Enter image file path: ");
+        System.out.println("\n> Enter image file path [ABSOLUTE]: ");
         String filePath = scanner.nextLine();
-
 
         // READ
         ImageInfo imageInfo = ReadInput.readInput(filePath);
-
         BufferedImage image = imageInfo.getOriginalImage();
 
-        // try {
-        //     int originalSizeBytes2 = Compressor.getImageSizeInBytes(image, imageInfo.getInputFormat());
-        //     System.out.println("Image size (BAOS method): " + originalSizeBytes2 + " bytes");
-        // } catch (IOException e) {
-        //     System.err.println("Error calculating image size: " + e.getMessage());
-        // }
-        
+        // Get size
+        long oriSize = imageInfo.getInputSize(filePath);
 
+        // * COMPRESSION
         Compressor compressor = new Compressor(imageInfo);
         compressor.compress();
         BufferedImage compressedImage = compressor.createCompressedImage();
-        long executionTime = compressor.getExecutionTime();
-        System.out.println("Execution time: " + executionTime + " ms");
-
-        // * SAVE
-        try {
-            ImageIO.write(compressedImage, "jpg", new File(imageInfo.getOutputPath() + "/compressed.jpg"));
-            System.out.println("Compressed image saved successfully!");
-        } catch (Exception e) {
-            System.out.println("Error saving compressed image: " + e.getMessage());
-        }
-
         
+
+        // * OUTPUT
+        System.out.println("╔══════════════════════════════════════════════════════════════════════════════════════════════════════════╗");
+        System.out.println("║                                   C O M P R E S S I O N   R E S U L T S                                  ║");
+        System.out.println("║               Tugas Kecil 2 IF2211 Strategi Algoritma - Kompresi Gambar Dengan Metode Quadtree           ║");
+        System.out.println("╚══════════════════════════════════════════════════════════════════════════════════════════════════════════╝");
+
+        try {
+            String outputPath = imageInfo.getOutputPath();
+            File outputFile = new File(outputPath);
+            ImageIO.write(compressedImage, imageInfo.getInputFormat(), outputFile);
+
+            long compressedSize = Compressor.getImageSize(compressedImage, imageInfo.getInputFormat());
+            // Display results
+            System.out.println("Compressed image saved successfully!\n");
+            System.out.println("Execution time: " + compressor.getExecutionTime() + " ms");
+            System.out.println("Original file size: " + oriSize + " bytes");
+            System.out.println("Compressed file size: " + compressedSize + " bytes");
+            
+        } catch (IOException e) {
+            System.err.println("Error: " + e.getMessage());
+        }
 
         scanner.close();
     }

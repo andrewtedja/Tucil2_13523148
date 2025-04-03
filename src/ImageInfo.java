@@ -11,9 +11,7 @@ class ImageInfo {
     private double targetCompressionPercentage;
     private String gifFolderPath;
     private String inputFormat;
-    // private String outputFormat;
 
-    // private int area;
     
     // ctor
     public ImageInfo(BufferedImage image, String inputPath, String outputPath,  int errorMethod, double threshold, int minBlockSize, double targetCompressionPercentage, String gifFolderPath) {
@@ -33,31 +31,35 @@ class ImageInfo {
     }
 
     public boolean isTargetPercentageMode() {
-        return targetCompressionPercentage > 0 && targetCompressionPercentage < 1;
+        return targetCompressionPercentage > 0 && targetCompressionPercentage <= 1;
+    }
+    
+    public long getInputSize(String filePath) {
+        File oriFile = new File(filePath);
+        long oriSize = oriFile.length();
+        return oriSize;
     }
 
-    // public int getArea() { return area; }
-    
     // getter setters
     public String getInputPath() { return inputPath; }
     public String getOutputPath() { return outputPath; }
+
     public int getErrorMethod() { return errorMethod; }
     public double getThreshold() { return threshold; }
     public int getMinBlockSize() { return minBlockSize; }
+
+    public void setThreshold(double threshold) { this.threshold = threshold; }
+
     public BufferedImage getOriginalImage() { return originalImage; }
     public void setOriginalImage(BufferedImage image) { 
         this.originalImage = image; 
-        // this.area = image.getWidth() * image.getHeight();
     }
-    
+
     public double getTargetCompressionPercentage() { return targetCompressionPercentage; }
     public String getGifFolderPath() { return gifFolderPath; }
 
     public String getInputFormat() { return inputFormat; }
     public void setInputFormat(String inputFormat) { this.inputFormat = inputFormat; }
-
-    // public String getOutputFormat() { return outputFormat; }
-    // public void setOutputFormat(String outputFormat) { this.outputFormat = outputFormat; }
 
     private static String getExtension(File file) {
         String fileName = file.getName();
