@@ -13,7 +13,7 @@ public class Compressor {
     private int maxDepth;
     private long executionTime;
 
-    private final int tolerance = 1000;
+    private final int tolerance = 100;
 
     // * Ctor
     public Compressor(ImageInfo imageInfo) {
@@ -79,68 +79,147 @@ public class Compressor {
         }
     }
 
+
+    // * TARGET PERCENTAGE FEATURE (BONUS)
     public void compressToTargetPercentage() {
         long startTime = System.nanoTime();
+
         BufferedImage image = imageInfo.getOriginalImage();
         long originalSize = imageInfo.getInputSize(imageInfo.getInputPath());
+
         double targetRatio = imageInfo.getTargetCompressionPercentage();
         long targetSize = (long) ((1 - targetRatio) * originalSize);
-        System.out.println("Original size: " + originalSize + ", Target size: " + targetSize);
+
+        System.out.println("Original size: " + originalSize + "bytes, Target size: " + targetSize + "bytes");
+        System.out.println("\nPlease wait, this may take a while...");
+
         
-        double threshold = 5.0;
-        double step = 2.5;  
-        double direction = 1.0;  
-        boolean crossedTarget = false;  
+        // initial threshold (based on effective range in error method divided by 2)
+        double threshold;
+        double minThreshold, maxThreshold;
         
-        int maxIterations = 50;
-        int iteration = 0;
-        long lastSize = 0;
-        long lastDiff = Long.MAX_VALUE;
+        switch (imageInfo.getErrorMethod()) {
+            case 1: // var
+                threshold = 8192; 
+                minThreshold = 1;
+                maxThreshold = 100000; 
+                break; 
+            case 2: // mad
+                threshold = 64; 
+                minThreshold = 1;
+                maxThreshold = 1000; 
+                break; 
+            case 3: // mpd
+                threshold = 128; 
+                minThreshold = 1;
+                maxThreshold = 1000; 
+                break; 
+            case 4: // entropy
+                threshold = 4; 
+                minThreshold = 0.1;
+                maxThreshold = 50; 
+                break; 
+            case 5: // ssim
+                threshold = 0.5; 
+                minThreshold = 0.01;
+                maxThreshold = 1.0; 
+                break; 
+            default: 
+                threshold = 8192; 
+                minThreshold = 1;
+                maxThreshold = 100000; 
+                break;
+        }
+        
+        long minSize = 0;
+        long maxSize = 0;
         
         try {
-            while (iteration < maxIterations) {
-                imageInfo.setThreshold(threshold);
-                
-                // Reset and build tree
-                this.root = new QuadTreeNode(0, 0, image.getWidth(), image.getHeight());
-                this.maxDepth = 1;
-                this.nodeCnt = 1;
-                buildTree(root, 1);
-                
-                BufferedImage compressedImage = createCompressedImage();
-                long compressedSize = getImageSize(compressedImage, imageInfo.getInputFormat());
-                long currentDiff = Math.abs(compressedSize - targetSize);
-                
-                // DEBUG
-                System.out.println("Iteration " + iteration + 
-                                 ": Size=" + compressedSize + 
-                                 ", Target=" + targetSize + 
-                                 ", Threshold=" + threshold +
-                                 ", Step=" + step);
-                
-                // break if close to target
-                if (currentDiff <= tolerance) {
-                    break;
+            // Test minimum threshold & juga maximum threshold
+            imageInfo.setThreshold(minThreshold);
+            this.root = new QuadTreeNode(0, 0, image.getWidth(), image.getHeight());
+            this.maxDepth = 1;
+            this.nodeCnt = 1;
+            buildTree(root, 1);
+            BufferedImage minImage = createCompressedImage();
+            minSize = getImageSize(minImage, imageInfo.getInputFormat());
+            
+            imageInfo.setThreshold(maxThreshold);
+            this.root = new QuadTreeNode(0, 0, image.getWidth(), image.getHeight());
+            this.maxDepth = 1;
+            this.nodeCnt = 1;
+            buildTree(root, 1);
+            BufferedImage maxImage = createCompressedImage();
+            maxSize = getImageSize(maxImage, imageInfo.getInputFormat());
+            
+            // System.out.println("Min threshold " + minThreshold + " size: " + minSize);
+            // System.out.println("Max threshold " + maxThreshold + " size: " + maxSize);
+            
+            boolean isTargetAchievable = (minSize >= targetSize && maxSize <= targetSize) || 
+                                        (minSize <= targetSize && maxSize >= targetSize);
+            
+            if (!isTargetAchievable) {
+                // use closest threshold
+                if (Math.abs(minSize - targetSize) < Math.abs(maxSize - targetSize)) {
+                    threshold = minThreshold;
+                } else {
+                    threshold = maxThreshold;
                 }
+            } else {
+                int maxIter = 30;
+                int iter = 0;
+                double currThreshold = threshold;
                 
-                // cross -> reverse and step becomes half
-                if (iteration > 0) {
-                    if (currentDiff > lastDiff) {
-                        direction *= -1;
-                        step *= 0.5;
-                        crossedTarget = true;
-                    } else if (compressedSize == lastSize) {
-                        step *= 2.0;
+                while (iter < maxIter) {
+                    imageInfo.setThreshold(currThreshold);
+                    
+                    // Reset tree
+                    this.root = new QuadTreeNode(0, 0, image.getWidth(), image.getHeight());
+                    this.maxDepth = 1;
+                    this.nodeCnt = 1;
+                    buildTree(root, 1);
+                    
+                    BufferedImage compressedImage = createCompressedImage();
+                    long compressedSize = getImageSize(compressedImage, imageInfo.getInputFormat());
+                    
+                    // DEBUG (turn on if wanna see process)
+                    // System.out.println("iterations " + iter + 
+                    //                  ": Size=" + compressedSize + 
+                    //                  ", Target=" + targetSize + 
+                    //                  ", Threshold=" + currThreshold);
+                    
+                    // Check if we're close enough
+                    if (Math.abs(compressedSize - targetSize) <= tolerance) {
+                        // System.out.println("Target size achieved in range of tolerance!!!!!");
+                        threshold = currThreshold;
+                        break;
                     }
+                    
+                    // binary search for best threshold
+                    // ? size too large -> less compression -> more threshold
+                    // ? size too small -> more compression -> less threshold
+                    if (compressedSize > targetSize) {
+                        minThreshold = currThreshold;
+                        minSize = compressedSize;
+                    } else {
+                        maxThreshold = currThreshold;
+                        maxSize = compressedSize;
+                    }
+                    currThreshold = (minThreshold + maxThreshold) / 2;
+                    iter++;
                 }
                 
-                threshold += direction * step;
-                threshold = Math.max(0.1, Math.min(255.0, threshold));
-                
-                lastSize = compressedSize;
-                lastDiff = currentDiff;
-                iteration++;
+                threshold = currThreshold;
             }
+            
+            // Final compress (with best threshold)
+            imageInfo.setThreshold(threshold);
+            this.root = new QuadTreeNode(0, 0, image.getWidth(), image.getHeight());
+            this.maxDepth = 1;
+            this.nodeCnt = 1;
+            buildTree(root, 1);
+            
+            System.out.println("Final threshold: " + threshold);
             
             long endTime = System.nanoTime();
             this.executionTime = (endTime - startTime) / 1000000;
