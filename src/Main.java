@@ -62,22 +62,42 @@ public class Main {
         System.out.println("\n> Enter image file path [ABSOLUTE]: ");
         String filePath = scanner.nextLine();
 
+        if (filePath.isEmpty()) {
+            System.err.println("Error: Input file path is empty.");
+            scanner.close();
+            return;
+        }
+
         // READ
         ImageInfo imageInfo = ReadInput.readInput(filePath);
+
+        if (imageInfo == null) {
+            System.err.println("Error: Failed to read image.");
+            scanner.close();
+            return;
+        }
         BufferedImage image = imageInfo.getOriginalImage();
+
+        if (image == null) {
+            System.err.println("Error: Failed to read image.");
+            scanner.close();
+            return;
+        }
 
         // Get size
         long oriSize = imageInfo.getInputSize(filePath);
         if (oriSize <= 0) {
             System.err.println("Error: Invalid original file size.");
+            scanner.close();
+            return;
         }
         
         // * COMPRESSION
         Compressor compressor = new Compressor(imageInfo);
         compressor.compress();
         BufferedImage compressedImage = compressor.createCompressedImage();
-        
 
+        clearScreen();
         // * OUTPUT
         System.out.println("╔══════════════════════════════════════════════════════════════════════════════════════════════════════════╗");
         System.out.println("║                                   C O M P R E S S I O N   R E S U L T S                                  ║");
@@ -93,7 +113,7 @@ public class Main {
             long compressedSize = Compressor.getImageSize(compressedImage, imageInfo.getInputFormat());
             // Display results
             System.out.println("Compressed image saved successfully!\n");
-            System.out.println("Execution time: " + compressor.getExecutionTime() + " ms");
+            System.out.println("<< Execution time: " + compressor.getExecutionTime() + " ms >>");
             System.out.println("Original file size: " + oriSize + " bytes");
             System.out.println("Compressed file size: " + compressedSize + " bytes");
             

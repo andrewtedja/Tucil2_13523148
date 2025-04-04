@@ -9,12 +9,12 @@ class ImageInfo {
     private int minBlockSize;
     private BufferedImage originalImage;
     private double targetCompressionPercentage;
-    private String gifFolderPath;
+    private String gifPath;
     private String inputFormat;
 
     
     // ctor
-    public ImageInfo(BufferedImage image, String inputPath, String outputPath,  int errorMethod, double threshold, int minBlockSize, double targetCompressionPercentage, String gifFolderPath) {
+    public ImageInfo(BufferedImage image, String inputPath, String outputPath,  int errorMethod, double threshold, int minBlockSize, double targetCompressionPercentage, String gifPath) {
         this.inputPath = inputPath;
         this.outputPath = outputPath;
 
@@ -24,7 +24,7 @@ class ImageInfo {
 
         this.originalImage = image;
         this.targetCompressionPercentage = targetCompressionPercentage;
-        this.gifFolderPath = gifFolderPath;
+        this.gifPath = gifPath;
 
         this.inputFormat = getExtension(new File(inputPath));
         // this.outputFormat = getExtension(new File(outputPath));
@@ -58,7 +58,7 @@ class ImageInfo {
     }
 
     public double getTargetCompressionPercentage() { return targetCompressionPercentage; }
-    public String getGifFolderPath() { return gifFolderPath; }
+    public String getGifPath() { return gifPath; }
 
     public String getInputFormat() { return inputFormat; }
     public void setInputFormat(String inputFormat) { this.inputFormat = inputFormat; }

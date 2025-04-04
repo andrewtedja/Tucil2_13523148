@@ -30,7 +30,7 @@ public class Compressor {
         return compressedImage;
     }
     
-    // main compression method
+    // * Compress
     public void compress() {
         if (imageInfo.isTargetPercentageMode()) {
             compressToTargetPercentage();
@@ -80,7 +80,7 @@ public class Compressor {
     }
 
 
-    // * TARGET PERCENTAGE FEATURE (BONUS)
+    // * Target Percentage Feature (BONUS)
     public void compressToTargetPercentage() {
         long startTime = System.nanoTime();
 
@@ -90,7 +90,7 @@ public class Compressor {
         double targetRatio = imageInfo.getTargetCompressionPercentage();
         long targetSize = (long) ((1 - targetRatio) * originalSize);
 
-        System.out.println("Original size: " + originalSize + "bytes, Target size: " + targetSize + "bytes");
+        System.out.println("Original size: " + originalSize + " bytes, Target size: " + targetSize + " bytes");
         System.out.println("\nPlease wait, this may take a while...");
 
         
