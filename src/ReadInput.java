@@ -55,7 +55,16 @@ class ReadInput {
             }
 
             // inputs
-            System.out.print("> Enter threshold: ");
+            Main.clearScreen();
+            System.out.println("\nIdeal threshold ranges for error methods:");
+            System.out.println("[1] Variance: 0 - 16834.0");
+            System.out.println("[2] MAD: 0 - 127.5");
+            System.out.println("[3] MaxPixelDifference: 0 - 255.0");
+            System.out.println("[4] Entropy: 0 - 8.0");
+            System.out.println("[5] SSIM (BONUS): 0 - 1");
+
+
+            System.out.print("\n> Enter threshold: ");
             double threshold = scanner.nextDouble();
             System.out.print("> Enter minimum block size: ");
             int minBlockSize = scanner.nextInt();
@@ -70,18 +79,6 @@ class ReadInput {
             String gifFolderPath = scanner.next();
                         
             return new ImageInfo(image, filePath, outputPath, errorMethod, threshold, minBlockSize, targetCompressionPercentage, gifFolderPath);
-
-            // Show (TESTING)
-            // System.out.println("Image name: " + fileName);
-            // System.out.println("Width: " + image.getWidth());
-            // System.out.println("Height: " + image.getHeight());
-            // System.out.println("Error Method: " + errorMethod);
-            // System.out.println("Threshold: " + threshold);
-            // System.out.println("Minimum block size: " + minBlockSize);
-            // System.out.println("Target compression percentage: " + targetCompressionPercentage);
-            // System.out.println("Output folder path: " + outputFolderPath);
-            // System.out.println("Gif folder path: " + gifFolderPath);
-
         }
     }
 }

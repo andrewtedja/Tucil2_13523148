@@ -2,9 +2,11 @@ import java.awt.image.BufferedImage;
 import java.util.List;
 
 class ErrorCalculation {
+    private static final double LOG2 = 1.442695;
     // * Error calculation methods (per channel)
     // Variance per channel
     private static double calculateVarianceForChannel(List<Integer> values, double mean) {
+        if (values.size() == 0) {return 0.0;}
         double squaredDiff = 0;
         
         for (int value: values) {
@@ -16,6 +18,7 @@ class ErrorCalculation {
 
     // MAD per channel
     public static double calculateMADForChannel(List<Integer> values, double mean) {
+        if (values.size() == 0) {return 0.0;}
         double absDiff = 0;
         for (int value: values) {
             absDiff += Math.abs(value - mean);
@@ -25,6 +28,11 @@ class ErrorCalculation {
 
     // Max Pixel Difference per channel
     public static double calculateMPDForChannel(double[] minMax) {
+        if (minMax.length == 0) {return 0.0;}
+        if (minMax.length == 1) {return 0.0;}
+        if (minMax.length > 2) {
+            throw new IllegalArgumentException("Array should have 2 elements only!");
+        }
         return minMax[1] - minMax[0];
     }
 
@@ -40,7 +48,7 @@ class ErrorCalculation {
         for (int count : freq) {
             if (count > 0) {
                 double p = (double) count / values.size();
-                entropy += p * (Math.log(p) / Math.log(2)); // log2(p) = ln(p)/ln(2)
+                entropy += p * (Math.log(p) * LOG2); // log2(p) = ln(p)/ln(2)
             }
         }
         return -entropy;
@@ -111,7 +119,7 @@ class ErrorCalculation {
                 break;
     
             case 5: 
-            // SSIM (Simplified)
+            // SSIM (Simplified, luminance only)
                 meansList = ChannelUtil.calculateAllMeans(image, x, y, width, height);
                 meanR = meansList[0];
                 meanG = meansList[1];

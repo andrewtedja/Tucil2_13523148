@@ -68,7 +68,10 @@ public class Main {
 
         // Get size
         long oriSize = imageInfo.getInputSize(filePath);
-
+        if (oriSize <= 0) {
+            System.err.println("Error: Invalid original file size.");
+        }
+        
         // * COMPRESSION
         Compressor compressor = new Compressor(imageInfo);
         compressor.compress();
@@ -82,6 +85,7 @@ public class Main {
         System.out.println("╚══════════════════════════════════════════════════════════════════════════════════════════════════════════╝");
 
         try {
+            
             String outputPath = imageInfo.getOutputPath();
             File outputFile = new File(outputPath);
             ImageIO.write(compressedImage, imageInfo.getInputFormat(), outputFile);
@@ -92,6 +96,11 @@ public class Main {
             System.out.println("Execution time: " + compressor.getExecutionTime() + " ms");
             System.out.println("Original file size: " + oriSize + " bytes");
             System.out.println("Compressed file size: " + compressedSize + " bytes");
+            
+            float compressionPercentage = (float) (1 - ((float) compressedSize / (float) oriSize)) * 100;
+            System.out.println("Compression percentage: " + compressionPercentage + "%");
+            System.out.println("Quadtree depth: " + compressor.getMaxDepth());
+            System.out.println("Node count: " + compressor.getNodeCount());
             
         } catch (IOException e) {
             System.err.println("Error: " + e.getMessage());

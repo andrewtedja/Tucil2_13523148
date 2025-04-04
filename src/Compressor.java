@@ -1,8 +1,6 @@
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 
 import javax.imageio.ImageIO;
 
@@ -14,57 +12,64 @@ public class Compressor {
     private int nodeCnt;
     private int maxDepth;
     private long executionTime;
-    private int originalSizeBytes;
-    private int compressedSizeBytes;
-    private final int tolerance = 100;
 
+    private final int tolerance = 1000;
 
-    
+    // * Ctor
     public Compressor(ImageInfo imageInfo) {
         this.imageInfo = imageInfo;
     }
     
+    // * Methods
     public BufferedImage createCompressedImage() {
-        System.out.println("TESTCOMPRESS");
+        if (root == null) {
+            throw new IllegalStateException("Error: Compression tree is not built yet.");
+        }
         BufferedImage compressedImage = new BufferedImage(imageInfo.getOriginalImage().getWidth(), imageInfo.getOriginalImage().getHeight(), imageInfo.getOriginalImage().getType());
         colorImage(root, compressedImage);
         return compressedImage;
     }
     
+    // main compression method
     public void compress() {
+        if (imageInfo.isTargetPercentageMode()) {
+            compressToTargetPercentage();
+            return;
+        }   
+
         long startTime = System.nanoTime();
-        // System.out.println("TEST1");
 
         BufferedImage image = imageInfo.getOriginalImage();
         this.root = new QuadTreeNode(0, 0, image.getWidth(), image.getHeight());
         this.maxDepth = 1;
         this.nodeCnt = 1;
+
         buildTree(root, 1);
-        // System.out.println("TEST3");
 
         long endTime = System.nanoTime();
         this.executionTime = (endTime - startTime) / 1000000;
     }
 
-
+    // Syarat split check
     private boolean shouldSplit(QuadTreeNode node) {
         double error = ErrorCalculation.getError(
             node, 
             imageInfo.getOriginalImage(), 
             imageInfo.getErrorMethod()
         );
+
         return error > imageInfo.getThreshold() && 
         ((node.getHeight()/2) * (node.getWidth()/2) >= imageInfo.getMinBlockSize());
     }
 
+    // DnC algorithm
     private void buildTree(QuadTreeNode node, int currDepth) {
 
         if (shouldSplit(node)) {
             node.split();
             nodeCnt += 4; // asumsi node count adalah semua node
             maxDepth = Math.max(maxDepth, currDepth + 1);
-
-            // * RECURSSIVE
+ 
             buildTree(node.getTopLeft(), currDepth + 1);
             buildTree(node.getTopRight(), currDepth + 1);
             buildTree(node.getBottomLeft(), currDepth + 1);
@@ -74,6 +79,77 @@ public class Compressor {
         }
     }
 
+    public void compressToTargetPercentage() {
+        long startTime = System.nanoTime();
+        BufferedImage image = imageInfo.getOriginalImage();
+        long originalSize = imageInfo.getInputSize(imageInfo.getInputPath());
+        double targetRatio = imageInfo.getTargetCompressionPercentage();
+        long targetSize = (long) ((1 - targetRatio) * originalSize);
+        System.out.println("Original size: " + originalSize + ", Target size: " + targetSize);
+        
+        double threshold = 5.0;
+        double step = 2.5;  
+        double direction = 1.0;  
+        boolean crossedTarget = false;  
+        
+        int maxIterations = 50;
+        int iteration = 0;
+        long lastSize = 0;
+        long lastDiff = Long.MAX_VALUE;
+        
+        try {
+            while (iteration < maxIterations) {
+                imageInfo.setThreshold(threshold);
+                
+                // Reset and build tree
+                this.root = new QuadTreeNode(0, 0, image.getWidth(), image.getHeight());
+                this.maxDepth = 1;
+                this.nodeCnt = 1;
+                buildTree(root, 1);
+                
+                BufferedImage compressedImage = createCompressedImage();
+                long compressedSize = getImageSize(compressedImage, imageInfo.getInputFormat());
+                long currentDiff = Math.abs(compressedSize - targetSize);
+                
+                // DEBUG
+                System.out.println("Iteration " + iteration + 
+                                 ": Size=" + compressedSize + 
+                                 ", Target=" + targetSize + 
+                                 ", Threshold=" + threshold +
+                                 ", Step=" + step);
+                
+                // break if close to target
+                if (currentDiff <= tolerance) {
+                    break;
+                }
+                
+                // cross -> reverse and step becomes half
+                if (iteration > 0) {
+                    if (currentDiff > lastDiff) {
+                        direction *= -1;
+                        step *= 0.5;
+                        crossedTarget = true;
+                    } else if (compressedSize == lastSize) {
+                        step *= 2.0;
+                    }
+                }
+                
+                threshold += direction * step;
+                threshold = Math.max(0.1, Math.min(255.0, threshold));
+                
+                lastSize = compressedSize;
+                lastDiff = currentDiff;
+                iteration++;
+            }
+            
+            long endTime = System.nanoTime();
+            this.executionTime = (endTime - startTime) / 1000000;
+        } catch (IOException e) {
+            System.err.println("Error during compression: " + e.getMessage());
+        }
+    }
+    
+    
     // ? HELPER
     // Set avg rgb for each node
     public void setNodeColor(QuadTreeNode node) {
@@ -89,11 +165,14 @@ public class Compressor {
 
     // fill the new image with color
     public void colorImage(QuadTreeNode node, BufferedImage target) {
+        if (node == null) {
+            return; // Skip null nodes
+        }
         if (node.getIsLeaf()) {
             Color color = new Color(
-                (int) node.getMeanR(),
-                (int) node.getMeanG(),
-                (int) node.getMeanB()
+                Math.round((float)node.getMeanR()),
+                Math.round((float)node.getMeanG()),
+                Math.round((float)node.getMeanB())
             );
             for (int y = node.getY(); y < node.getY() + node.getHeight(); y++) {
                 for (int x = node.getX(); x < node.getX() + node.getWidth(); x++) {
@@ -109,14 +188,19 @@ public class Compressor {
     }
     
     // BAOS
-    public static int getImageSizeInBytes(BufferedImage image, String format) throws IOException {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ImageIO.write(image, format, baos);  
-        baos.flush();
-        int size = baos.size(); 
-        baos.close();
-        return size;
-    }
+    public static long getImageSize(BufferedImage image , String format) throws IOException {
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageIO.write(image, format, baos);
+            baos.flush();
+            long size = baos.size();
+            baos.close();
+            return size;
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new IOException("Error calculating image size: " + e.getMessage());
+        }
+    }   
 
     public int getMaxDepth() {
         return maxDepth;

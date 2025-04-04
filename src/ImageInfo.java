@@ -36,8 +36,11 @@ class ImageInfo {
     
     public long getInputSize(String filePath) {
         File oriFile = new File(filePath);
-        long oriSize = oriFile.length();
-        return oriSize;
+        if (!oriFile.exists()) {
+            System.err.println("Error: file doesn't exist");
+            return -1; 
+        }
+        return oriFile.length();
     }
 
     // getter setters
@@ -47,7 +50,6 @@ class ImageInfo {
     public int getErrorMethod() { return errorMethod; }
     public double getThreshold() { return threshold; }
     public int getMinBlockSize() { return minBlockSize; }
-
     public void setThreshold(double threshold) { this.threshold = threshold; }
 
     public BufferedImage getOriginalImage() { return originalImage; }
