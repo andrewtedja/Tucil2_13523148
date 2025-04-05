@@ -128,7 +128,7 @@ public class Main {
             System.out.println("Compressed file size: " + compressedSize + " bytes");
             
             float compressionPercentage = (float) (1 - ((float) compressedSize / (float) oriSize)) * 100;
-            System.out.println("Compression percentage: " + compressionPercentage + "%");
+            System.out.println(String.format("Compression percentage: %.3f%%", compressionPercentage));
             System.out.println("Quadtree depth: " + compressor.getMaxDepth());
             System.out.println("Node count: " + compressor.getNodeCount());
             

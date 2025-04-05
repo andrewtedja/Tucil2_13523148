@@ -18,7 +18,7 @@ class ReadInput {
             }
 
             if (!file.exists()) {
-                System.err.println("Error: File does not exist");
+                System.err.println("Error: File does not exist (path invalid)");
                 return null;
             }
 
@@ -45,6 +45,7 @@ class ReadInput {
             }
 
             // Input error
+            Main.clearScreen();
             System.out.println("\nImage loaded successfully!");
 
             System.out.println("\n╔══════════════════════════════════════════╗");
