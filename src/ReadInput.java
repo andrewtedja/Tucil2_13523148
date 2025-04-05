@@ -47,12 +47,15 @@ class ReadInput {
             // Input error
             System.out.println("\nImage loaded successfully!");
 
-            System.out.println("\nError methods: ");
-            System.out.println("[1] Variance");
-            System.out.println("[2] MAD");
-            System.out.println("[3] MaxPixelDifference");
-            System.out.println("[4] Entropy");
-            System.out.println("[5] SSIM (BONUS)");
+            System.out.println("\n╔══════════════════════════════════════════╗");
+            System.out.println("║               ERROR METHODS              ║");
+            System.out.println("╠══════════════════════════════════════════╣");
+            System.out.println("║  [1] Variance                            ║");
+            System.out.println("║  [2] Mean Absolute Difference (MAD)      ║");
+            System.out.println("║  [3] Maximum Pixel Difference            ║");
+            System.out.println("║  [4] Entropy                             ║");
+            System.out.println("║  [5] SSIM (Structural Similarity)        ║");
+            System.out.println("╚══════════════════════════════════════════╝");
             int errorMethod;
             while (true) {
                 try {
@@ -69,14 +72,21 @@ class ReadInput {
 
             // inputs
             Main.clearScreen();
-            System.out.println("\nYour chosen method: [" + errorMethod + "] ");
-            System.out.println("\nIdeal threshold ranges for error methods:");
-            System.out.println("[1] Variance: 0 - 16834.0");
-            System.out.println("[2] MAD: 0 - 127.5");
-            System.out.println("[3] MaxPixelDifference: 0 - 255.0");
-            System.out.println("[4] Entropy: 0 - 8.0");
-            System.out.println("[5] SSIM (BONUS): 0 - 1");
-            
+            System.out.println("\n╔══════════════════════════════════════════════════════════════╗");
+            System.out.println("║                     COMPRESSION SETTINGS                     ║");
+            System.out.println("╠══════════════════════════════════════════════════════════════╣");
+            System.out.println("║  Selected Method: [" + errorMethod + "]                                        ║");
+            System.out.println("╠══════════════════════════════════════════════════════════════╣");
+            System.out.println("║  IDEAL THRESHOLD RANGES:                                     ║");
+            System.out.println("║  ┌─────────────────────────────┬────────────────────────┐    ║");
+            System.out.println("║  │ [1] Variance                │ Range: 0 - 16834.0     │    ║");
+            System.out.println("║  │ [2] MAD                     │ Range: 0 - 127.5       │    ║");
+            System.out.println("║  │ [3] MaxPixelDifference      │ Range: 0 - 255.0       │    ║");
+            System.out.println("║  │ [4] Entropy                 │ Range: 0 - 8.0         │    ║");
+            System.out.println("║  │ [5] SSIM                    │ Range: 0 - 1.0         │    ║");
+            System.out.println("║  └─────────────────────────────┴────────────────────────┘    ║");
+            System.out.println("╚══════════════════════════════════════════════════════════════╝");
+
 
             double threshold;
             System.out.print("\n> Enter threshold: ");
@@ -110,10 +120,28 @@ class ReadInput {
                 System.err.println("Error: Invalid target compression percentage. Please reenter.\n");
             }
 
-            System.out.print("> Enter output file path [ABSOLUTE]: ");
-            String outputPath = scanner.next();
-            System.out.print("> Enter output GIF file path [ABSOLUTE]: ");
-            String gifPath = scanner.next();
+            System.out.print("\n");
+            String outputPath;
+            while (true) {
+                System.out.print("> Enter output file path [ABSOLUTE]: ");
+                outputPath = scanner.next();
+                if (!outputPath.endsWith(".jpg") && !outputPath.endsWith(".png") && !outputPath.endsWith(".jpeg")) {
+                    System.err.println("Error: Output file must end with .jpg, .png or .jpeg. Please reenter.\n");
+                    continue;
+                }
+                break;
+            }
+
+            String gifPath;
+            while (true) {
+                System.out.print("> Enter output GIF file path [ABSOLUTE]: ");
+                gifPath = scanner.next();
+                if (!gifPath.endsWith(".gif")) {
+                    System.err.println("Error: Output GIF file must end with .gif. Please reenter.\n");
+                    continue;
+                }
+                break;
+            }
                         
             return new ImageInfo(image, filePath, outputPath, errorMethod, threshold, minBlockSize, targetCompressionPercentage, gifPath);
         }

@@ -59,6 +59,15 @@ public class Main {
         // * INPUT AND READ
         // Input image
         Scanner scanner = new Scanner(System.in);
+        System.out.println("\n");
+        System.out.println("██╗███╗   ███╗ █████╗  ██████╗ ███████╗     ██████╗ ██████╗ ███╗   ███╗██████╗ ██████╗ ███████╗███████╗███████╗ ██████╗ ██████╗ ");
+        System.out.println("██║████╗ ████║██╔══██╗██╔════╝ ██╔════╝    ██╔════╝██╔═══██╗████╗ ████║██╔══██╗██╔══██╗██╔════╝██╔════╝██╔════╝██╔═══██╗██╔══██╗");
+        System.out.println("██║██╔████╔██║███████║██║  ███╗█████╗      ██║     ██║   ██║██╔████╔██║██████╔╝██████╔╝█████╗  ███████╗███████╗██║   ██║██████╔╝");
+        System.out.println("██║██║╚██╔╝██║██╔══██║██║   ██║██╔══╝      ██║     ██║   ██║██║╚██╔╝██║██╔═══╝ ██╔══██╗██╔══╝  ╚════██║╚════██║██║   ██║██╔══██╗");
+        System.out.println("██║██║ ╚═╝ ██║██║  ██║╚██████╔╝███████╗    ╚██████╗╚██████╔╝██║ ╚═╝ ██║██║     ██║  ██║███████╗███████║███████║╚██████╔╝██║  ██║");
+        System.out.println("╚═╝╚═╝     ╚═╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝     ╚═════╝ ╚═════╝ ╚═╝     ╚═╝╚═╝     ╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝ ╚═════╝ ╚═╝  ╚═╝");
+        System.out.println("\n                                      Q U A D T R E E   I M A G E   C O M P R E S S I O N                                        ");
+
         System.out.println("\n> Enter image file path [ABSOLUTE]: ");
         String filePath = scanner.nextLine();
 
@@ -112,8 +121,9 @@ public class Main {
 
             long compressedSize = Compressor.getImageSize(compressedImage, imageInfo.getInputFormat());
             // Display results
-            System.out.println("Compressed image saved successfully!\n");
-            System.out.println("<< Execution time: " + compressor.getExecutionTime() + " ms >>");
+            System.out.println("Compressed image saved successfully at: [" + outputPath + "]!\n");
+
+            System.out.println("<< Execution time: " + compressor.getExecutionTime() + " ms >>\n");
             System.out.println("Original file size: " + oriSize + " bytes");
             System.out.println("Compressed file size: " + compressedSize + " bytes");
             
