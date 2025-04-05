@@ -112,13 +112,19 @@ public class Main {
 
             long compressedSize = Compressor.getImageSize(compressedImage, imageInfo.getInputFormat());
             // Display results
-            System.out.println("Compressed image saved successfully!\n");
+            System.out.println("Compressed image saved successfully in " + outputPath + "!\n");
+
+            if (imageInfo.getGifPath() != null && !imageInfo.getGifPath().isEmpty()) {
+                System.out.println("GIF animation saved to: " + imageInfo.getGifPath());
+            }
+
             System.out.println("<< Execution time: " + compressor.getExecutionTime() + " ms >>");
+
             System.out.println("Original file size: " + oriSize + " bytes");
             System.out.println("Compressed file size: " + compressedSize + " bytes");
             
             float compressionPercentage = (float) (1 - ((float) compressedSize / (float) oriSize)) * 100;
-            System.out.println("Compression percentage: " + compressionPercentage + "%");
+            System.out.println(String.format("Compression percentage: %.3f%%", compressionPercentage));
             System.out.println("Quadtree depth: " + compressor.getMaxDepth());
             System.out.println("Node count: " + compressor.getNodeCount());
             
