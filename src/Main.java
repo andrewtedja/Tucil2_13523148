@@ -60,13 +60,16 @@ public class Main {
         // Input image
         Scanner scanner = new Scanner(System.in);
         System.out.println("\n");
-        System.out.println("██╗███╗   ███╗ █████╗  ██████╗ ███████╗     ██████╗ ██████╗ ███╗   ███╗██████╗ ██████╗ ███████╗███████╗███████╗ ██████╗ ██████╗ ");
-        System.out.println("██║████╗ ████║██╔══██╗██╔════╝ ██╔════╝    ██╔════╝██╔═══██╗████╗ ████║██╔══██╗██╔══██╗██╔════╝██╔════╝██╔════╝██╔═══██╗██╔══██╗");
-        System.out.println("██║██╔████╔██║███████║██║  ███╗█████╗      ██║     ██║   ██║██╔████╔██║██████╔╝██████╔╝█████╗  ███████╗███████╗██║   ██║██████╔╝");
-        System.out.println("██║██║╚██╔╝██║██╔══██║██║   ██║██╔══╝      ██║     ██║   ██║██║╚██╔╝██║██╔═══╝ ██╔══██╗██╔══╝  ╚════██║╚════██║██║   ██║██╔══██╗");
-        System.out.println("██║██║ ╚═╝ ██║██║  ██║╚██████╔╝███████╗    ╚██████╗╚██████╔╝██║ ╚═╝ ██║██║     ██║  ██║███████╗███████║███████║╚██████╔╝██║  ██║");
-        System.out.println("╚═╝╚═╝     ╚═╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝     ╚═════╝ ╚═════╝ ╚═╝     ╚═╝╚═╝     ╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝ ╚═════╝ ╚═╝  ╚═╝");
-        System.out.println("\n                                      Q U A D T R E E   I M A G E   C O M P R E S S I O N                                        ");
+        System.out.println("                ,@@@@@@@,     @@@@@,");
+        System.out.println("        ,,,.   ,@@@@@@/@@,  .oo8888o. .#o44##.");
+        System.out.println("     ,&%%&%&&%,@@@@@/@@@@@@,8888\\88/8o#/848/80");
+        System.out.println("    ,%&\\%&&%&&%,@@@\\@@@/@@@88\\88888/##84#880#8@");
+        System.out.println("    %&&%&%&/%&&%@@\\@@/ /@@@88888\\8884#0884880888");
+        System.out.println("    %&&%/ %&%%&&@@\\ V /@@' `88\\8 `/88'%&&%/ %&'");
+        System.out.println("    `&%\\ ` /%&'    | |        \\   /     \\  /");
+        System.out.println("        | |        | |         | |      | |    ");
+        System.out.println("        | |        | |         | |      | |    ");
+        System.out.println("\n Q U A D T R E E   I M A G E   C O M P R E S S I O N");
 
         System.out.println("\n> Enter image file path [ABSOLUTE]: ");
         String filePath = scanner.nextLine();
@@ -80,6 +83,8 @@ public class Main {
         // READ
         ImageInfo imageInfo = ReadInput.readInput(filePath);
 
+
+        // validations
         if (imageInfo == null) {
             System.err.println("Error: Failed to read image.");
             scanner.close();
@@ -108,10 +113,10 @@ public class Main {
 
         clearScreen();
         // * OUTPUT
-        System.out.println("╔══════════════════════════════════════════════════════════════════════════════════════════════════════════╗");
-        System.out.println("║                                   C O M P R E S S I O N   R E S U L T S                                  ║");
-        System.out.println("║               Tugas Kecil 2 IF2211 Strategi Algoritma - Kompresi Gambar Dengan Metode Quadtree           ║");
-        System.out.println("╚══════════════════════════════════════════════════════════════════════════════════════════════════════════╝");
+        System.out.println("--------------------------------------------------------------------------------");
+        System.out.println("|                              COMPRESSION RESULTS                             |");
+        System.out.println("|       IF2211 Strategi Algoritma - Kompresi Gambar Dengan Metode Quadtree     |");
+        System.out.println("--------------------------------------------------------------------------------");
 
         try {
             

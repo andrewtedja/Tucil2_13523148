@@ -48,15 +48,15 @@ class ReadInput {
             Main.clearScreen();
             System.out.println("\nImage loaded successfully!");
 
-            System.out.println("\n╔══════════════════════════════════════════╗");
-            System.out.println("║               ERROR METHODS              ║");
-            System.out.println("╠══════════════════════════════════════════╣");
-            System.out.println("║  [1] Variance                            ║");
-            System.out.println("║  [2] Mean Absolute Difference (MAD)      ║");
-            System.out.println("║  [3] Maximum Pixel Difference            ║");
-            System.out.println("║  [4] Entropy                             ║");
-            System.out.println("║  [5] SSIM (Structural Similarity)        ║");
-            System.out.println("╚══════════════════════════════════════════╝");
+            System.out.println("\n+------------------------------------------+");
+            System.out.println("|               ERROR METHODS              |");
+            System.out.println("+------------------------------------------+");
+            System.out.println("|  1. Variance                             |");
+            System.out.println("|  2. Mean Absolute Difference (MAD)       |");
+            System.out.println("|  3. Maximum Pixel Difference             |");
+            System.out.println("|  4. Entropy                              |");
+            System.out.println("|  5. SSIM (Structural Similarity)         |");
+            System.out.println("+------------------------------------------+");
 
             int errorMethod;
             while (true) {
@@ -91,20 +91,18 @@ class ReadInput {
             if (targetCompressionPercentage == 0) {
                 // inputs
                 Main.clearScreen();
-                System.out.println("\n╔══════════════════════════════════════════════════════════════╗");
-                System.out.println("║                     COMPRESSION SETTINGS                     ║");
-                System.out.println("╠══════════════════════════════════════════════════════════════╣");
-                System.out.println("║  Selected Method: [" + errorMethod + "]                                        ║");
-                System.out.println("╠══════════════════════════════════════════════════════════════╣");
-                System.out.println("║  IDEAL THRESHOLD RANGES:                                     ║");
-                System.out.println("║  ┌─────────────────────────────┬────────────────────────┐    ║");
-                System.out.println("║  │ [1] Variance                │ Range: 0 - 16834.0     │    ║");
-                System.out.println("║  │ [2] MAD                     │ Range: 0 - 127.5       │    ║");
-                System.out.println("║  │ [3] MaxPixelDifference      │ Range: 0 - 255.0       │    ║");
-                System.out.println("║  │ [4] Entropy                 │ Range: 0 - 8.0         │    ║");
-                System.out.println("║  │ [5] SSIM                    │ Range: 0 - 1.0         │    ║");
-                System.out.println("║  └─────────────────────────────┴────────────────────────┘    ║");
-                System.out.println("╚══════════════════════════════════════════════════════════════╝");
+                System.out.println("\n+-----------------------------------------------+");
+                System.out.println("|               COMPRESSION SETTINGS            |");
+                System.out.println("+-----------------------------------------------+");
+                System.out.println("|  Selected Method: [" + errorMethod + "]                         |");
+                System.out.println("+-----------------------------------------------+");
+                System.out.println("|  IDEAL THRESHOLD RANGES:                      |");
+                System.out.println("|  [1] Variance: 0 - 16834.0                    |");
+                System.out.println("|  [2] MAD: 0 - 127.5                           |");
+                System.out.println("|  [3] MaxPixelDifference: 0 - 255.0            |");
+                System.out.println("|  [4] Entropy: 0 - 8.0                         |");
+                System.out.println("|  [5] SSIM: 0 - 1.0                            |");
+                System.out.println("+-----------------------------------------------+");
     
                 System.out.print("\n> Enter threshold: ");
                 threshold = scanner.nextDouble();
@@ -136,18 +134,18 @@ class ReadInput {
                 break;
             }
 
-            String gifPath;
-            while (true) {
-                System.out.print("> Enter output GIF file path [ABSOLUTE]: ");
-                gifPath = scanner.next();
-                if (!gifPath.endsWith(".gif")) {
-                    System.err.println("Error: Output GIF file must end with .gif. Please reenter.\n");
-                    continue;
-                }
-                break;
-            }
+            // String gifPath;
+            // while (true) {
+            //     System.out.print("> Enter output GIF file path [ABSOLUTE]: ");
+            //     gifPath = scanner.next();
+            //     if (!gifPath.endsWith(".gif")) {
+            //         System.err.println("Error: Output GIF file must end with .gif. Please reenter.\n");
+            //         continue;
+            //     }
+            //     break;
+            // }
                         
-            return new ImageInfo(image, filePath, outputPath, errorMethod, threshold, minBlockSize, targetCompressionPercentage, gifPath);
+            return new ImageInfo(image, filePath, outputPath, errorMethod, threshold, minBlockSize, targetCompressionPercentage); // gifpath
         }
     }
 }
