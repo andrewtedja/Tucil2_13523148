@@ -30,9 +30,7 @@ class ErrorCalculation {
     public static double calculateMPDForChannel(double[] minMax) {
         if (minMax.length == 0) {return 0.0;}
         if (minMax.length == 1) {return 0.0;}
-        if (minMax.length > 2) {
-            throw new IllegalArgumentException("Array should have 2 elements only!");
-        }
+
         return minMax[1] - minMax[0];
     }
 
