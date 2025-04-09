@@ -46,6 +46,21 @@ The program accepts image files as input, performs the compression, and outputs 
     java -jar bin/QuadTreeCompressor.jar
     ```
 
+### Note : For Modification and Rebuild
+
+After cloning the repository, you can rebuild the project by running the following command:
+
+```bash
+javac -d bin src\*.java
+jar cvfe bin/QuadTreeCompressor.jar Main -C bin .
+```
+
+**Execute**
+
+```bash
+java -jar bin/QuadTreeCompressor.jar
+```
+
 ## 🌐 Features
 
 -   Reading input image file (.png/.jpg/.jpeg) from user through CLI:
@@ -130,6 +145,9 @@ Tucil1_13523148
 -   **Java & JDK**: Version 11 or higher (tested on JDK 17)
 
 ## 🚧 Room for Improvement
+
+-   Add GIF feature to produce GIFs for better visualization of the compression process
+-   Reoptimize the calculations and process for more flexible and efficient compression
 
 ## 🪪 Author
 
