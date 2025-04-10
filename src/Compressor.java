@@ -3,6 +3,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.imageio.stream.FileImageOutputStream;
+import javax.imageio.stream.ImageOutputStream;
+
+import java.io.File;
 
 import java.awt.Color;
 
@@ -12,12 +16,15 @@ public class Compressor {
     private int nodeCnt;
     private int maxDepth;
     private long executionTime;
+    private String gifPath;
+    private GifWriter gifWriter;
 
     private final int tolerance = 100;
 
     // * Ctor
     public Compressor(ImageInfo imageInfo) {
         this.imageInfo = imageInfo;
+        this.gifPath = imageInfo.getGifPath();
     }
     
     // * Methods
@@ -36,7 +43,7 @@ public class Compressor {
             compressToTargetPercentage();
             return;
         }   
-
+        // System.out.println("testafter");
         long startTime = System.nanoTime();
 
         BufferedImage image = imageInfo.getOriginalImage();
@@ -44,6 +51,7 @@ public class Compressor {
         this.maxDepth = 1;
         this.nodeCnt = 1;
 
+        
         buildTree(root, 1);
 
         long endTime = System.nanoTime();
@@ -52,6 +60,10 @@ public class Compressor {
 
     // Syarat split check
     private boolean shouldSplit(QuadTreeNode node) {
+        if (node.getWidth() < 2 || node.getHeight() < 2) {
+            return false;
+        } // stop kalau block sudah terlalu kecil
+
         double error = ErrorCalculation.getError(
             node, 
             imageInfo.getOriginalImage(), 
@@ -67,7 +79,7 @@ public class Compressor {
 
         if (shouldSplit(node)) {
             node.split();
-            nodeCnt += 4; // asumsi node count adalah semua node
+            nodeCnt += 4;
             maxDepth = Math.max(maxDepth, currDepth + 1);
  
             buildTree(node.getTopLeft(), currDepth + 1);
@@ -76,6 +88,7 @@ public class Compressor {
             buildTree(node.getBottomRight(), currDepth + 1);
         } else {
             setNodeColor(node);
+            node.setIsLeaf(true); 
         }
     }
 
@@ -90,6 +103,7 @@ public class Compressor {
         double targetRatio = imageInfo.getTargetCompressionPercentage();
         long targetSize = (long) ((1 - targetRatio) * originalSize);
 
+        // System.out.println("Target: " + targetRatio * 100);
         System.out.println("Original size: " + originalSize + " bytes, Target size: " + targetSize + " bytes");
         System.out.println("\nPlease wait, this may take a while...");
 
@@ -218,18 +232,18 @@ public class Compressor {
             this.maxDepth = 1;
             this.nodeCnt = 1;
             buildTree(root, 1);
-            
+
             System.out.println("Final threshold: " + threshold);
             
             long endTime = System.nanoTime();
             this.executionTime = (endTime - startTime) / 1000000;
         } catch (IOException e) {
-            System.err.println("Error during compression: " + e.getMessage());
+            System.err.println("Error: " + e.getMessage());
         }
     }
     
     
-    // ? HELPER
+    // ? HELPER FUNCTIONS
     // Set avg rgb for each node
     public void setNodeColor(QuadTreeNode node) {
         BufferedImage image = imageInfo.getOriginalImage();
@@ -245,7 +259,7 @@ public class Compressor {
     // fill the new image with color
     public void colorImage(QuadTreeNode node, BufferedImage target) {
         if (node == null) {
-            return; // Skip null nodes
+            return; 
         }
         if (node.getIsLeaf()) {
             Color color = new Color(
@@ -266,6 +280,64 @@ public class Compressor {
         }
     }
     
+    // * Create GIF (bonus)
+    public void createGif() {
+        if (root == null || gifPath == null || gifPath.isEmpty()) {
+            return;
+        }
+        
+        try {
+            ImageOutputStream output = new FileImageOutputStream(new File(gifPath));
+            BufferedImage originalImage = imageInfo.getOriginalImage();
+            GifWriter writer = new GifWriter(output, originalImage.getType(), 1000, true);
+            
+            setNodeColor(root);
+
+            // tiap depth, buat frame
+            for (int depth = 1; depth <= maxDepth; depth++) {
+                BufferedImage frameImage = new BufferedImage(
+                    originalImage.getWidth(), 
+                    originalImage.getHeight(), 
+                    originalImage.getType());
+                
+                createFrameEachDepth(root, frameImage, depth, 1);
+                writer.writeToSequence(frameImage);
+            }
+            writer.writeToSequence(createCompressedImage());            
+            writer.close();
+        } catch (IOException e) {
+            System.err.println("Error: " + e.getMessage());
+        }
+    }
+
+    // Create gif frame (per depth of quadtree)
+    private void createFrameEachDepth(QuadTreeNode node, BufferedImage frame, int maxDepth, int currentDepth) {
+        if (node == null) {
+            return;
+        }
+        
+        // If leaf, set color with avg rgb
+        if (currentDepth >= maxDepth || node.getIsLeaf()) {
+            setNodeColor(node);
+            Color color = new Color(
+                Math.round((float)node.getMeanR()),
+                Math.round((float)node.getMeanG()),
+                Math.round((float)node.getMeanB())
+            );
+            
+            for (int y = node.getY(); y < node.getY() + node.getHeight(); y++) {
+                for (int x = node.getX(); x < node.getX() + node.getWidth(); x++) {
+                    frame.setRGB(x, y, color.getRGB());
+                }
+            }
+        } else {
+            createFrameEachDepth(node.getTopLeft(), frame, maxDepth, currentDepth + 1);
+            createFrameEachDepth(node.getTopRight(), frame, maxDepth, currentDepth + 1);
+            createFrameEachDepth(node.getBottomLeft(), frame, maxDepth, currentDepth + 1);
+            createFrameEachDepth(node.getBottomRight(), frame, maxDepth, currentDepth + 1);
+        }
+    }
+
     // BAOS
     public static long getImageSize(BufferedImage image , String format) throws IOException {
         try {
@@ -277,10 +349,11 @@ public class Compressor {
             return size;
         } catch (IOException e) {
             e.printStackTrace();
-            throw new IOException("Error calculating image size: " + e.getMessage());
+            throw new IOException("Error: " + e.getMessage());
         }
     }   
 
+    // getters
     public int getMaxDepth() {
         return maxDepth;
     }
@@ -292,5 +365,6 @@ public class Compressor {
     public long getExecutionTime() {
         return executionTime;
     }
+
 
 }   

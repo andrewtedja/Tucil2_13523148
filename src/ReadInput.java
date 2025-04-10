@@ -134,18 +134,18 @@ class ReadInput {
                 break;
             }
 
-            // String gifPath;
-            // while (true) {
-            //     System.out.print("> Enter output GIF file path [ABSOLUTE]: ");
-            //     gifPath = scanner.next();
-            //     if (!gifPath.endsWith(".gif")) {
-            //         System.err.println("Error: Output GIF file must end with .gif. Please reenter.\n");
-            //         continue;
-            //     }
-            //     break;
-            // }
+            String gifPath;
+            while (true) {
+                System.out.print("> Enter output GIF file path [ABSOLUTE]: ");
+                gifPath = scanner.next();
+                if (!gifPath.endsWith(".gif")) {
+                    System.err.println("Error: Output GIF file must end with .gif. Please reenter.\n");
+                    continue;
+                }
+                break;
+            }
                         
-            return new ImageInfo(image, filePath, outputPath, errorMethod, threshold, minBlockSize, targetCompressionPercentage); // gifpath
+            return new ImageInfo(image, filePath, outputPath, errorMethod, threshold, minBlockSize, targetCompressionPercentage, gifPath); 
         }
     }
 }

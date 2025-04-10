@@ -54,6 +54,7 @@ class QuadTreeNode {
     }
 
     public boolean getIsLeaf() { return this.isLeaf; }
+    public void setIsLeaf(boolean isLeaf) { this.isLeaf = isLeaf; }
     public QuadTreeNode getTopLeft() { return this.topLeft; }
     public QuadTreeNode getTopRight() { return this.topRight; }
     public QuadTreeNode getBottomLeft() { return this.bottomLeft; }

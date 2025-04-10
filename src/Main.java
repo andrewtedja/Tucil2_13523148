@@ -123,10 +123,12 @@ public class Main {
             String outputPath = imageInfo.getOutputPath();
             File outputFile = new File(outputPath);
             ImageIO.write(compressedImage, imageInfo.getInputFormat(), outputFile);
+            compressor.createGif();
 
             long compressedSize = Compressor.getImageSize(compressedImage, imageInfo.getInputFormat());
             // Display results
-            System.out.println("Compressed image saved successfully at : <" + outputPath + ">!!!\n");
+            System.out.println("Compressed image saved successfully at : <" + outputPath + ">!!!");
+            System.out.println("Gif image saved successfully at: <" + imageInfo.getGifPath() + ">!!!\n");
 
             System.out.println("<< Execution time: " + compressor.getExecutionTime() + " ms >>\n");
             System.out.println("Original file size       : " + oriSize + " bytes");
