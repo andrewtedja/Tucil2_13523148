@@ -25,7 +25,7 @@ public class GifWriter {
         gce.setAttribute("disposalMethod", "none");
         gce.setAttribute("userInputFlag", "FALSE");
         gce.setAttribute("transparentColorFlag", "FALSE");
-        gce.setAttribute("delayTime", Integer.toString(delay / 10));
+        gce.setAttribute("delayTime", Integer.toString(delay / 15));
         gce.setAttribute("transparentColorIndex", "0");
         root.appendChild(gce);
 

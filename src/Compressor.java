@@ -103,11 +103,9 @@ public class Compressor {
         double targetRatio = imageInfo.getTargetCompressionPercentage();
         long targetSize = (long) ((1 - targetRatio) * originalSize);
 
-        // System.out.println("Target: " + targetRatio * 100);
         System.out.println("Original size: " + originalSize + " bytes, Target size: " + targetSize + " bytes");
         System.out.println("\nPlease wait, this may take a while...");
 
-        
         // initial threshold (based on effective range in error method divided by 2)
         double threshold;
         double minThreshold, maxThreshold;
@@ -166,9 +164,6 @@ public class Compressor {
             BufferedImage maxImage = createCompressedImage();
             maxSize = getImageSize(maxImage, imageInfo.getInputFormat());
             
-            // System.out.println("Min threshold " + minThreshold + " size: " + minSize);
-            // System.out.println("Max threshold " + maxThreshold + " size: " + maxSize);
-            
             boolean isTargetAchievable = (minSize >= targetSize && maxSize <= targetSize) || 
                                         (minSize <= targetSize && maxSize >= targetSize);
             
@@ -196,15 +191,7 @@ public class Compressor {
                     BufferedImage compressedImage = createCompressedImage();
                     long compressedSize = getImageSize(compressedImage, imageInfo.getInputFormat());
                     
-                    // DEBUG (turn on if wanna see process)
-                    // System.out.println("iterations " + iter + 
-                    //                  ": Size=" + compressedSize + 
-                    //                  ", Target=" + targetSize + 
-                    //                  ", Threshold=" + currThreshold);
-                    
-                    // Check if we're close enough
                     if (Math.abs(compressedSize - targetSize) <= tolerance) {
-                        // System.out.println("Target size achieved in range of tolerance!!!!!");
                         threshold = currThreshold;
                         break;
                     }

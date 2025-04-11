@@ -9,6 +9,11 @@ class ReadInput {
     public static ImageInfo readInput(String filePath)  {
         try (Scanner scanner = new Scanner(System.in)) {
             File file = new File(filePath);
+            while (!file.isAbsolute()) {
+                System.out.println("ERROR! Please provide an absolute file path:");
+                filePath = scanner.nextLine();
+                file = new File(filePath);
+            }
             String fileName = file.getName();
             
             // Validation
@@ -103,9 +108,20 @@ class ReadInput {
                 System.out.println("|  [4] Entropy: 0 - 8.0                         |");
                 System.out.println("|  [5] SSIM: 0 - 1.0                            |");
                 System.out.println("+-----------------------------------------------+");
-    
-                System.out.print("\n> Enter threshold: ");
-                threshold = scanner.nextDouble();
+                
+                while (true) {
+                    try {
+                        System.out.print("\n> Enter threshold: ");
+                        threshold = scanner.nextDouble();
+                        if (threshold >= 0) {
+                            break;
+                        }
+                    }
+                    catch (InputMismatchException e) {
+                        scanner.nextLine();
+                    }
+                    System.err.println("Error: Invalid threshold. Please reenter.");
+                }
             } 
             
             int minBlockSize;
@@ -127,6 +143,11 @@ class ReadInput {
             while (true) {
                 System.out.print("> Enter output file path [ABSOLUTE]: ");
                 outputPath = scanner.next();
+                File f = new File(outputPath);
+                if (!f.isAbsolute()) {
+                    System.err.println("Error: Output file path must be absolute. Please reenter.\n");
+                    continue;
+                }
                 if (!outputPath.endsWith(".jpg") && !outputPath.endsWith(".png") && !outputPath.endsWith(".jpeg")) {
                     System.err.println("Error: Output file must end with .jpg, .png or .jpeg. Please reenter.\n");
                     continue;
@@ -138,6 +159,11 @@ class ReadInput {
             while (true) {
                 System.out.print("> Enter output GIF file path [ABSOLUTE]: ");
                 gifPath = scanner.next();
+                File f = new File(gifPath);
+                if (!f.isAbsolute()) {
+                    System.err.println("Error: Output GIF file path must be absolute. Please reenter.\n");
+                    continue;
+                }
                 if (!gifPath.endsWith(".gif")) {
                     System.err.println("Error: Output GIF file must end with .gif. Please reenter.\n");
                     continue;

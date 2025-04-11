@@ -14,7 +14,9 @@ class ImageInfo {
 
     
     // ctor
-    public ImageInfo(BufferedImage image, String inputPath, String outputPath,  int errorMethod, double threshold, int minBlockSize, double targetCompressionPercentage, String gifPath) {
+    public ImageInfo(BufferedImage image, String inputPath, 
+    String outputPath,  int errorMethod, double threshold, 
+    int minBlockSize, double targetCompressionPercentage, String gifPath) {
         this.inputPath = inputPath;
         this.outputPath = outputPath;
 
@@ -27,7 +29,6 @@ class ImageInfo {
         this.gifPath = gifPath;
 
         this.inputFormat = getExtension(new File(inputPath));
-        // this.outputFormat = getExtension(new File(outputPath));
     }
 
     public boolean isTargetPercentageMode() {
