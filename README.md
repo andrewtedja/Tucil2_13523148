@@ -1,6 +1,10 @@
 # Tucil2_13523148
 
+![Java](https://img.shields.io/badge/Java-17-blue?logo=java)
+![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux-green?logo=windows)
+
 > Tugas Kecil 2 IF2211 Strategi Algoritma - Kompresi Gambar Dengan Metode Quadtree
+> ![CLI Interface Title Screen](./test/output1.gif) ![CLI Interface Title Screen](./img/title.png)
 
 ## Table of Contents
 
@@ -34,32 +38,31 @@ The program accepts image files as input, performs the compression, and outputs 
 
     ```bash
     git clone https://github.com/andrewtedja/Tucil2_13523148.git
+    cd Tucil2_13523148
     ```
 
     or
 
     Download the source code (.zip) from the latest release at [GitHub Repository](https://github.com/andrewtedja/Tucil2_13523148), extract the zip file and open the terminal
 
-3. **Execute the JAR file**:
-
     ```bash
-    java -jar bin/QuadTreeCompressor.jar
+    cd Tucil2_13523148
     ```
 
-### Note : For Modification and Rebuild
+3. **Run the Program**
 
-After cloning the repository, you can rebuild the project by running the following command:
+    For **Windows**:
 
-```bash
-javac -d bin src\*.java
-jar cvfe bin/QuadTreeCompressor.jar Main -C bin .
-```
+    ```cmd
+    run.bat
+    ```
 
-**Execute**
+    For **Linux**:
 
-```bash
-java -jar bin/QuadTreeCompressor.jar
-```
+    ```bash
+    chmod +x run.sh
+    ./run.sh
+    ```
 
 ## 🌐 Features
 
@@ -82,8 +85,6 @@ java -jar bin/QuadTreeCompressor.jar
 
 ## 📷 Screenshots
 
-![CLI Interface Title Screen](./img/title.png)
-
 ### Image Comparison
 
 ### Original Image
@@ -100,7 +101,7 @@ java -jar bin/QuadTreeCompressor.jar
 
 ### Compressed Image Results Screen
 
-![Results)](./img/results.png)
+![Results](./img/results.png)
 
 ## 🎁 Bonus Status
 
@@ -108,36 +109,32 @@ java -jar bin/QuadTreeCompressor.jar
 | ----------------------------------------------------- | ------ |
 | **Target Percentage** Compression                     | ✅     |
 | **Structural Similarity Index (SSIM)** Implementation | ✅     |
+| **GIF Visualization Output** Implementation           | ✅     |
 
 ## 📁 Project Structure
 
 Struktur folder:
 
 ```bash
-Tucil1_13523148
-├── bin
-│    ├── QuadTreeCompressor.jar
-│    ├── ChannelUtil.class
-│    ├── Compressor.class
-│    ├── ErrorCalculation.class
-│    ├── ImageInfo.class
-│    ├── Main.class
-│    ├── QuadTreeNode.class
-│    ├── ReadInput.class
-├── doc
+Tucil2_13523148/
+├── bin/
+├── doc/
 │    ├── Tucil_K3_13523148_AndrewTedjapratama.pdf
-├── src
+├── src/
 │    ├── ChannelUtil.java
 │    ├── Compressor.java
 │    ├── ErrorCalculation.java
+│    ├── GifWriter.java
 │    ├── ImageInfo.java
-│     ├── Main.java
+│    ├── Main.java
 │    ├── QuadTreeNode.java
 │    └── ReadInput.java
-├── test
-├── img
+├── test/
+│    └── ... test results
+├── run.sh
+├── run.bat
+├── img/
 ├── README.md
-
 ```
 
 ## 🛠️ Technologies Used
@@ -146,7 +143,6 @@ Tucil1_13523148
 
 ## 🚧 Room for Improvement
 
--   Add GIF feature to produce GIFs for better visualization of the compression process
 -   Reoptimize the calculations and process for more flexible and efficient compression
 
 ## 🪪 Author
