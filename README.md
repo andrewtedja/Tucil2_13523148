@@ -4,7 +4,11 @@
 ![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux-green?logo=windows)
 
 > Tugas Kecil 2 IF2211 Strategi Algoritma - Kompresi Gambar Dengan Metode Quadtree
-> ![CLI Interface Title Screen](./test/output1.gif) ![CLI Interface Title Screen](./img/title.png)
+>
+> <p align="center">
+>   <img src="./test/output1.gif" />
+>   <img src="./img/title.png" />
+> </p>
 
 ## Table of Contents
 
